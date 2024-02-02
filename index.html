@@ -4,93 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Particle Prediction</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            color: #333;
-            padding: 20px 0;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin: 10px 0;
-            font-size: 16px;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Particle Classification</title>
 </head>
 <body>
-    <h1>Magic Particle Prediction</h1>
-    <form action="/predict" method="post">
+    <h1>Particle Classification</h1>
+    
+    {% if predicted_class %}
+        <h2>Predicted Class:</h2>
+        <p>{{ predicted_class }}</p>
+        <a href="/">Go back</a>
+    {% endif %}
+    
+    <form method="post" action="/">
         <label for="fLength">fLength:</label>
-        <input type="text" id="fLength" name="fLength" required>
-
+        <input type="text" name="fLength" required><br>
         <label for="fWidth">fWidth:</label>
-        <input type="text" id="fWidth" name="fWidth" required>
-
+        <input type="text" name="fWidth" required><br>
         <label for="fSize">fSize:</label>
-        <input type="text" id="fSize" name="fSize" required>
-
+        <input type="text" name="fSize" required><br>
         <label for="fConc">fConc:</label>
-        <input type="text" id="fConc" name="fConc" required>
-
+        <input type="text" name="fConc" required><br>
         <label for="fConc1">fConc1:</label>
-        <input type="text" id="fConc1" name="fConc1" required>
-
+        <input type="text" name="fConc1" required><br>
         <label for="fAsym">fAsym:</label>
-        <input type="text" id="fAsym" name="fAsym" required>
-
+        <input type="text" name="fAsym" required><br>
         <label for="fM3Long">fM3Long:</label>
-        <input type="text" id="fM3Long" name="fM3Long" required>
-
+        <input type="text" name="fM3Long" required><br>
         <label for="fM3Trans">fM3Trans:</label>
-        <input type="text" id="fM3Trans" name="fM3Trans" required>
-
+        <input type="text" name="fM3Trans" required><br>
         <label for="fAlpha">fAlpha:</label>
-        <input type="text" id="fAlpha" name="fAlpha" required>
-
+        <input type="text" name="fAlpha" required><br>
         <label for="fDist">fDist:</label>
-        <input type="text" id="fDist" name="fDist" required>
-        
+        <input type="text" name="fDist" required><br>
         <input type="submit" value="Predict">
     </form>
-    <img src="CERN_logo.svg.png" alt="Particle Physics Image" style="max-width: 100%;">
 </body>
 </html>
