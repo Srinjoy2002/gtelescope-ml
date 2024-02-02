@@ -1,5 +1,4 @@
-from flask import Flask, request
-
+from flask import Flask, render_template_string, request
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
@@ -71,18 +70,7 @@ def home():
         predicted_class = predict_particle_class(user_input, scaler, svm_model)
 
         # Display the result
-        return f"""
-        <html>
-            <head>
-                <title>Particle Classification</title>
-            </head>
-            <body>
-                <h1>Particle Classification</h1>
-                <p>The predicted class is: {predicted_class}</p>
-                <a href="/">Go back</a>
-            </body>
-        </html>
-        """
+        return f"The predicted class is: {predicted_class}"
 
     # Render the form
     return """
