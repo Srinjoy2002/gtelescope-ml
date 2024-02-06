@@ -1,5 +1,4 @@
 from flask import Flask, request
-
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
@@ -51,8 +50,8 @@ dump(svm_model, model_filename)
 
 # Function to preprocess user input and make a prediction
 def predict_particle_class(user_input, scaler, model):
-    user_input_list = [float(user_input[col]) for col in cols[:-1]]
-    user_scaled = scaler.transform([user_input_list])
+    user_df = pd.DataFrame([user_input])
+    user_scaled = scaler.transform(user_df)
     prediction = model.predict(user_scaled)
     predicted_class = "gamma" if prediction[0] == 1 else "hadron"
     return predicted_class
@@ -60,68 +59,61 @@ def predict_particle_class(user_input, scaler, model):
 # Render the form using HTML directly
 @app.route("/", methods=["GET", "POST"])
 def home():
-    predicted_class = None
-
     if request.method == "POST":
         # Extract user input from the form
         user_input = {
-            "fLength": request.form["fLength"],
-            "fWidth": request.form["fWidth"],
-            "fSize": request.form["fSize"],
-            "fConc": request.form["fConc"],
-            "fConc1": request.form["fConc1"],
-            "fAsym": request.form["fAsym"],
-            "fM3Long": request.form["fM3Long"],
-            "fM3Trans": request.form["fM3Trans"],
-            "fAlpha": request.form["fAlpha"],
-            "fDist": request.form["fDist"],
+            "fLength": float(request.form["fLength"]),
+            "fWidth": float(request.form["fWidth"]),
+            "fSize": float(request.form["fSize"]),
+            "fConc": float(request.form["fConc"]),
+            "fConc1": float(request.form["fConc1"]),
+            "fAsym": float(request.form["fAsym"]),
+            "fM3Long": float(request.form["fM3Long"]),
+            "fM3Trans": float(request.form["fM3Trans"]),
+            "fAlpha": float(request.form["fAlpha"]),
+            "fDist": float(request.form["fDist"]),
         }
 
         # Make a prediction
         predicted_class = predict_particle_class(user_input, scaler, svm_model)
 
+        # Display the result
+        return f"The predicted class is: {predicted_class}"
+
+    # Render the form
     return """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Particle Classification</title>
-    </head>
-    <body>
-        <h1>Particle Classification</h1>
-        <form method="post" action="/">
-            <label for="fLength">fLength:</label>
-            <input type="text" name="fLength" required><br>
-            <label for="fWidth">fWidth:</label>
-            <input type="text" name="fWidth" required><br>
-            <label for="fSize">fSize:</label>
-            <input type="text" name="fSize" required><br>
-            <label for="fConc">fConc:</label>
-            <input type="text" name="fConc" required><br>
-            <label for="fConc1">fConc1:</label>
-            <input type="text" name="fConc1" required><br>
-            <label for="fAsym">fAsym:</label>
-            <input type="text" name="fAsym" required><br>
-            <label for="fM3Long">fM3Long:</label>
-            <input type="text" name="fM3Long" required><br>
-            <label for="fM3Trans">fM3Trans:</label>
-            <input type="text" name="fM3Trans" required><br>
-            <label for="fAlpha">fAlpha:</label>
-            <input type="text" name="fAlpha" required><br>
-            <label for="fDist">fDist:</label>
-            <input type="text" name="fDist" required><br>
-            <input type="submit" value="Predict">
-        </form>
-        {% if predicted_class %}
-        <h2>Predicted Class:</h2>
-        <p>{{ predicted_class }}</p>
-        <p><a href="/">Go back</a></p>
-        {% endif %}
-    </body>
+    <html>
+        <head>
+            <title>Particle Classification</title>
+        </head>
+        <body>
+            <h1>Particle Classification</h1>
+            <form method="post" action="/">
+                <label for="fLength">fLength:</label>
+                <input type="text" name="fLength" required><br>
+                <label for="fWidth">fWidth:</label>
+                <input type="text" name="fWidth" required><br>
+                <label for="fSize">fSize:</label>
+                <input type="text" name="fSize" required><br>
+                <label for="fConc">fConc:</label>
+                <input type="text" name="fConc" required><br>
+                <label for="fConc1">fConc1:</label>
+                <input type="text" name="fConc1" required><br>
+                <label for="fAsym">fAsym:</label>
+                <input type="text" name="fAsym" required><br>
+                <label for="fM3Long">fM3Long:</label>
+                <input type="text" name="fM3Long" required><br>
+                <label for="fM3Trans">fM3Trans:</label>
+                <input type="text" name="fM3Trans" required><br>
+                <label for="fAlpha">fAlpha:</label>
+                <input type="text" name="fAlpha" required><br>
+                <label for="fDist">fDist:</label>
+                <input type="text" name="fDist" required><br>
+                <input type="submit" value="Predict">
+            </form>
+        </body>
     </html>
-    """.format(predicted_class=predicted_class)
+    """
 
 if __name__ == "__main__":
     app.run(debug=True)
