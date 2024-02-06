@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template_string
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
@@ -59,6 +59,8 @@ def predict_particle_class(user_input, scaler, model):
 # Render the form using HTML directly
 @app.route("/", methods=["GET", "POST"])
 def home():
+    predicted_class = None  # Initialize predicted_class variable
+    
     if request.method == "POST":
         # Extract user input from the form
         user_input = {
@@ -77,17 +79,19 @@ def home():
         # Make a prediction
         predicted_class = predict_particle_class(user_input, scaler, svm_model)
 
-        # Display the result
-        return f"The predicted class is: {predicted_class}"
-
-    # Render the form
-    return """
+    # Render the form with predicted_class
+    return render_template_string("""
     <html>
         <head>
             <title>Particle Classification</title>
         </head>
         <body>
             <h1>Particle Classification</h1>
+            {% if predicted_class %}
+            <h2>Predicted Class:</h2>
+            <p>{{ predicted_class }}</p>
+            <p><a href="/">Go back</a></p>
+            {% else %}
             <form method="post" action="/">
                 <label for="fLength">fLength:</label>
                 <input type="text" name="fLength" required><br>
@@ -111,9 +115,10 @@ def home():
                 <input type="text" name="fDist" required><br>
                 <input type="submit" value="Predict">
             </form>
+            {% endif %}
         </body>
     </html>
-    """
+    """, predicted_class=predicted_class)
 
 if __name__ == "__main__":
     app.run(debug=True)
