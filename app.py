@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request
+from flask import Flask, request
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import RandomOverSampler
@@ -48,7 +48,15 @@ model_filename = "svm_model.joblib"
 dump(scaler, scaler_filename)
 dump(svm_model, model_filename)
 
-# Render the form using an inline template
+# Function to preprocess user input and make a prediction
+def predict_particle_class(user_input, scaler, model):
+    user_df = pd.DataFrame([user_input])
+    user_scaled = scaler.transform(user_df)
+    prediction = model.predict(user_scaled)
+    predicted_class = "gamma" if prediction[0] == 1 else "hadron"
+    return predicted_class
+
+# Render the form using HTML directly
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
@@ -106,13 +114,6 @@ def home():
         </body>
     </html>
     """
-
-def predict_particle_class(user_input, scaler, model):
-    user_df = pd.DataFrame([user_input])
-    user_scaled = scaler.transform(user_df)
-    prediction = model.predict(user_scaled)
-    predicted_class = "gamma" if prediction[0] == 1 else "hadron"
-    return predicted_class
 
 if __name__ == "__main__":
     app.run(debug=True)
