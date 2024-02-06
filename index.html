@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Particle Classification</title>
 </head>
 <body>
     <h1>Particle Classification</h1>
-    
     {% if predicted_class %}
-        <h2>Predicted Class:</h2>
-        <p>{{ predicted_class }}</p>
-        <a href="/">Go back</a>
-    {% endif %}
-    
+    <h2>Predicted Class:</h2>
+    <p>{{ predicted_class }}</p>
+    <p><a href="/">Go back</a></p>
+    {% else %}
     <form method="post" action="/">
         <label for="fLength">fLength:</label>
         <input type="text" name="fLength" required><br>
@@ -38,5 +32,6 @@
         <input type="text" name="fDist" required><br>
         <input type="submit" value="Predict">
     </form>
+    {% endif %}
 </body>
 </html>
